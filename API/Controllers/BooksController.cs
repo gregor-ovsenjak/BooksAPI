@@ -2,6 +2,7 @@
 using API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace API.Controllers
 {
@@ -29,6 +30,17 @@ namespace API.Controllers
             var book = await _context.Books.FindAsync(id);
 
             return book;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Book>> PostBook(Book book)
+        {
+
+            _context.Books.Add(book);
+            
+            await _context.SaveChangesAsync();
+            
+            return CreatedAtAction(nameof(GetBook),new{ Id = book.Id},book);
         }
     }
 }
